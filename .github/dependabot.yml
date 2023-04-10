@@ -4,12 +4,31 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  ghcr:
+    type: docker-registry
+    url: ghcr.io/scalar-labs
+    username: ${{secrets.CR_USER}}
+    password: ${{secrets.CR_PASSWORD}}
+    replaces-base: true
 updates:
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/schema-loader/" # Location of package manifests
+  - package-ecosystem: "docker"
+    directory: "/schema-loader/"
+    registries:
+      - ghcr
     schedule:
       interval: "weekly"
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/server/" # Location of package manifests
+    allow:
+      - dependency-name: "scalar-labs/jre8"
+  - package-ecosystem: "docker"
+    directory: "/server/"
+    registries:
+      - ghcr
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "scalar-labs/jre8"
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "weekly"
