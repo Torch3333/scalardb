@@ -7,7 +7,7 @@ version: 2
 registries:
   ghcr:
     type: docker-registry
-    url: https://ghcr.io/scalar-labs
+    url: https://ghcr.io
     username: ${{secrets.CR_USER}}
     password: ${{secrets.CR_PASSWORD}}
     replaces-base: true
