@@ -29,7 +29,7 @@ updates:
     allow:
       - dependency-name: "scalar-labs/jre8"
   - package-ecosystem: "gradle"
-    directory: "/core/"
+    directory: "/"
     schedule:
       interval: "weekly"
     allow:
