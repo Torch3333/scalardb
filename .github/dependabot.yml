@@ -28,6 +28,12 @@ updates:
       interval: "weekly"
     allow:
       - dependency-name: "scalar-labs/jre8"
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "scalar-labs/jre8"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
