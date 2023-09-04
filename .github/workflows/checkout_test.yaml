@@ -33,4 +33,4 @@ jobs:
           ref : ${{ github.event.pull_request.base.ref }}
 
       - name: Print check value file
-        run: cat ./github/workflows/check_value
+        run: cat ./.github/workflows/check_value
