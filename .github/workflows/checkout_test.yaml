@@ -9,6 +9,7 @@ env:
 
 jobs:
   checkout_test:
+    name: Checkout test
     runs-on: ubuntu-latest
 
     steps:
