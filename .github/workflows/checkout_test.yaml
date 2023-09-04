@@ -1,0 +1,32 @@
+name: Checkout test
+
+on:
+  push:
+  pull_request:
+
+env:
+  TERM: dumb
+
+jobs:
+  checkout_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Checkout previous commit
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v3
+        with:
+          ref : ${{ github.event.before }}
+
+      - name: Checkout base branch
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v3
+        with:
+          ref : ${{ github.event.pull_request.base.ref }}
