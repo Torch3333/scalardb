@@ -26,20 +26,25 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Prepare the client version to checkout
         run: |
-          case ${{ github.event_name }} in
-            push)
+          case "${{ github.event_name }}" in
+          
+            "push")
               echo "CLIENT_REF=${{ github.event.before }}" >> "$GITHUB_ENV"
               ;;
-            pull_request)
+          
+            "pull_request")
               echo "CLIENT_REF=${{ github.event.pull_request.base.ref }}" >> "$GITHUB_ENV"
               ;;
-            workflow_dispatch)
+          
+            "workflow_dispatch")
               echo "CLIENT_REF=${{ inputs.client_ref }}" >> "$GITHUB_ENV"
               ;;
+          
             *)
               echo "Unexpected workflow trigger: ${{ github.event_name }}"
               exit 1
               ;;
+            esac
       - name: Checkout old commit
         if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v3
