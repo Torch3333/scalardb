@@ -19,18 +19,24 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Prepare the client version to checkout
+        run: |
+          case ${{ github.event_name }
+            push)
+              echo CLIENT_VERSION_REF=${{ github.event.before }} >> $GITHUB_ENV
+              ;;
+            pull_request)
+              echo CLIENT_VERSION_REF=${{ github.event.pull_request.base.ref }} >> $GITHUB_ENV
+              ;;
+            workflow_dispatch)
+              echo CLIENT_VERSION_REF=${{ github.event.before }} >> $GITHUB_ENV
+              ;;
 
-      - name: Checkout previous commit
+      - name: Checkout old commit
         if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v3
         with:
-          ref : ${{ github.event.before }}
-
-      - name: Checkout base branch
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/checkout@v3
-        with:
-          ref : ${{ github.event.pull_request.base.ref }}
+          ref : $CLIENT_VERSION_REF
 
       - name: Print check value file
         run: cat ./.github/workflows/check_value
