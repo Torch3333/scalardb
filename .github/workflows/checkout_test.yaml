@@ -27,11 +27,7 @@ jobs:
       - name: Prepare the client version to checkout
         run: |
           case "${{ github.event_name }}" in
-          
-#            "push")
-#              echo "client_ref=${{ github.event.before }}" >> "$GITHUB_ENV"
-#              ;;
-          
+                  
             "pull_request")
               echo "client_ref=${{ github.event.pull_request.base.ref }}" >> "$GITHUB_ENV"
               ;;
