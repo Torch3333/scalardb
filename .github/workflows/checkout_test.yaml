@@ -26,7 +26,7 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Prepare the client version to checkout
         run: |
-          case ${{ github.event_name }
+          case ${{ github.event_name }}
             push)
               echo CLIENT_REF=${{ github.event.before }} >> $GITHUB_ENV
               ;;
