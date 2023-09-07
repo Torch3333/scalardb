@@ -3,7 +3,12 @@ name: Checkout test
 on:
   push:
   pull_request:
-
+  workflow_dispatch:
+    inputs:
+      client_ref:
+        description: 'The branch, tag or SHA to use for the client'
+        type: string
+        required: true
 env:
   TERM: dumb
 
@@ -23,20 +28,23 @@ jobs:
         run: |
           case ${{ github.event_name }
             push)
-              echo CLIENT_VERSION_REF=${{ github.event.before }} >> $GITHUB_ENV
+              echo CLIENT_REF=${{ github.event.before }} >> $GITHUB_ENV
               ;;
             pull_request)
-              echo CLIENT_VERSION_REF=${{ github.event.pull_request.base.ref }} >> $GITHUB_ENV
+              echo CLIENT_REF=${{ github.event.pull_request.base.ref }} >> $GITHUB_ENV
               ;;
             workflow_dispatch)
-              echo CLIENT_VERSION_REF=${{ github.event.before }} >> $GITHUB_ENV
+              echo CLIENT_REF=${{ inputs.client_ref }} >> $GITHUB_ENV
               ;;
-
+            *)
+              echo "Unexpected workflow trigger: ${{ github.event_name }}"
+              exit 1
+              ;;
       - name: Checkout old commit
         if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v3
         with:
-          ref : $CLIENT_VERSION_REF
+          ref : $CLIENT_REF
 
       - name: Print check value file
         run: cat ./.github/workflows/check_value
