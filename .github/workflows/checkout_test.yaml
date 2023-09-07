@@ -28,9 +28,9 @@ jobs:
         run: |
           case "${{ github.event_name }}" in
           
-            "push")
-              echo "client_ref=${{ github.event.before }}" >> "$GITHUB_ENV"
-              ;;
+#            "push")
+#              echo "client_ref=${{ github.event.before }}" >> "$GITHUB_ENV"
+#              ;;
           
             "pull_request")
               echo "client_ref=${{ github.event.pull_request.base.ref }}" >> "$GITHUB_ENV"
@@ -44,7 +44,7 @@ jobs:
               echo "Unexpected workflow trigger: ${{ github.event_name }}"
               exit 1
               ;;
-            esac
+          esac
       - name: Checkout old commit
         uses: actions/checkout@v3
         with:
