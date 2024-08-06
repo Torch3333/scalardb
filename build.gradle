@@ -42,7 +42,7 @@ subprojects {
         assertjVersion = '3.26.3'
         mockitoVersion = '4.11.0'
         spotbugsVersion = '4.8.6'
-        errorproneVersion = '2.10.0'
+        errorproneVersion = '2.29.2'
         errorproneJavacVersion = '9+181-r4173-1'
         gsonVersion = '2.11.0'
         stefanbirknerSystemLambdaVersion = '1.2.1'
