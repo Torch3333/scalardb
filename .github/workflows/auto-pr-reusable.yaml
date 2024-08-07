@@ -1,18 +1,16 @@
-name: Auto-PR
+name: Auto-PR reusable workflow
 
 on:
-  pull_request:
-    branches:
-      - master
-      - "[0-9]+"
-      - "[0-9]+.[0-9]+"
-    types:
-      - closed
-
-env:
-  TERM: dumb
+  workflow_call:
+    inputs:
+      project_base_name:
+        required: true
+        type: string
+      default_branch_name:
+        required: true
+        type: string
 jobs:
-  if_merged:
+  create_backport_pull_requests:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
@@ -20,6 +18,10 @@ jobs:
       # Escape the PR title. See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable for details
       PR_TITLE: ${{ github.event.pull_request.title }}
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
         with:
           # This is necessary to avoid unexpected auto-merge in git cherry-pick
@@ -40,12 +42,12 @@ jobs:
             new_pr_assignee="${{ github.event.pull_request.user.login }}"
           fi
 
-          versions=$(ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}")
+          versions=$(ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
           echo -------------
           echo "versions: $versions"
           echo -------------
 
-          branches=$(ci/auto-pr/conv_proj_version_to_branch $versions)
+          branches=$(ci/auto-pr/conv_proj_version_to_branch "${{ inputs.default_branch_name }}" $versions)
           # Remove the base branch from the list because the target change is already merged to the branch.
           branches=$(echo "$branches" | sed "/^${{ github.base_ref }}$/d")
           echo -------------
