@@ -11,7 +11,7 @@ on:
 
 jobs:
   if_merged:
-    uses: torch3333/scalardb/.github/workflows/auto-pr-reusable.yaml@main
+    uses: torch3333/scalardb/.github/workflows/auto-pr-reusable.yaml@master
     with:
       project-base-name: "ScalarDB fork"
       default-branch-name: "master"
