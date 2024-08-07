@@ -3,7 +3,7 @@ name: Auto-PR
 on:
   pull_request:
     branches:
-      - main
+      - master
       - "[0-9]+"
       - "[0-9]+.[0-9]+"
     types:
@@ -14,4 +14,4 @@ jobs:
     uses: torch3333/scalardb/.github/workflows/auto-pr-reusable.yaml@main
     with:
       project-base-name: "ScalarDB fork"
-      default-branch-name: "main"
+      default-branch-name: "master"
