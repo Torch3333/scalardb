@@ -15,3 +15,4 @@ jobs:
     with:
       project_base_name: "ScalarDB fork"
       default_branch_name: "master"
+      secrets: inherit
