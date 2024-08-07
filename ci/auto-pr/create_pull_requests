@@ -33,16 +33,28 @@ function cherry_pick_and_create_pull_request () {
 
   git checkout $branch
   git checkout -b $new_branch
-  if ! git cherry-pick --no-rerere-autoupdate -m1 $commit_sha; then
-      git cherry-pick --abort
-      return 1
+  if git cherry-pick --no-rerere-autoupdate -m1 $commit_sha;
+  then
+    # If the cherry-pick succeeds, creates the backport PR with it
+    git push origin $new_branch
+    git status
+    gh pr create --assignee $assignee \
+      --base "$branch" \
+      --title "Backport to branch($branch) : $pull_request_title" \
+      --body "Backport of $pull_request_url"
+  else
+    # If the cherry-pick fails, creates an issue and the backport PR draft containing an empty commit
+   git cherry-pick --abort
+   git commit --allow-empty -m "Empty commit [skip ci]"
+   git push origin $new_branch
+   git status
+   issue_url=$(create_issue $branch)
+   gh pr create --assignee $assignee \
+       --base "$branch" \
+       --title "Backport to branch($branch) : $pull_request_title" \
+       --body "Backport of $pull_request_url\n\nResolves $issue_url" \
+       --draft
   fi
-  git push origin $new_branch
-  git status
-  gh pr create --assignee $assignee \
-    --base "$branch" \
-    --title "Backport to branch($branch) : $pull_request_title" \
-    --body "Backport of $pull_request_url"
 }
 
 function create_issue () {

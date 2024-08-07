@@ -2,6 +2,7 @@
 
 require "set"
 
+default_branch_name = ARGV.shift
 versions = ARGV
 
 versions.inject(Set.new) {|acc, v|
@@ -12,7 +13,7 @@ versions.inject(Set.new) {|acc, v|
       # e.g. project: "ScalarDB 4.0.0" -> branch: "master"
       #
       # This GitHub project corresponds to `main`/`master` branch.
-      acc << "master"
+      acc << default_branch_name
     else
       # e.g. project: "ScalarDB 3.8.0" -> branch: "3"
       #
