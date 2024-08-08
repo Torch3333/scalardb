@@ -34,11 +34,6 @@ jobs:
           sparse-checkout: ci/auto-pr
           ref: ${{ inputs.version }}
           path: auto-pr
-      - name : List dirs
-        run: |
-          sudo apt-get install tree
-          tree .
-
       - name: Checkout project repository
         uses: actions/checkout@v4
         with:
