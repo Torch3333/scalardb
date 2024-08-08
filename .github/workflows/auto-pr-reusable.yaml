@@ -6,9 +6,7 @@ on:
       project_base_name:
         required: true
         type: string
-      default_branch_name:
-        required: true
-        type: string
+
 env:
   TERM: dumb
 jobs:
@@ -48,8 +46,10 @@ jobs:
           echo -------------
           echo "versions: $versions"
           echo -------------
-
-          branches=$(ci/auto-pr/conv_proj_version_to_branch "${{ inputs.default_branch_name }}" $versions)
+          
+          default_branch=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
+          
+          branches=$(ci/auto-pr/conv_proj_version_to_branch $default_branch $versions)
           # Remove the base branch from the list because the target change is already merged to the branch.
           branches=$(echo "$branches" | sed "/^${{ github.base_ref }}$/d")
           echo -------------
