@@ -6,6 +6,9 @@ on:
       project_base_name:
         required: true
         type: string
+      version:
+        required: true
+        type: string
 
 env:
   TERM: dumb
@@ -22,16 +25,33 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+
+      - name: Checkout auto-pr scripts
+        uses: actions/checkout@v4
+        with:
+          repository: torch3333/scalardb
+          fetch-depth: 0
+          sparse-checkout: ci/auto-pr
+          ref: ${{ inputs.version }}
+          path: auto-pr
+      - name : List dirs
+        run: |
+          sudo apt-get install tree
+          tree .
+
+      - name: Checkout project repository
+        uses: actions/checkout@v4
         with:
           # This is necessary to avoid unexpected auto-merge in git cherry-pick
           fetch-depth: 0
           # This is necessary for git-push
           token: ${{ secrets.GH_PR_PAT }}
+          path: repo
 
       - name: Create pull requests
+        working-directory: repo
         run: |
-          assignee=$(/bin/bash -x ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
+          assignee=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
           echo -------------
           echo "assignee: $assignee"
           echo -------------
@@ -42,21 +62,21 @@ jobs:
             new_pr_assignee="${{ github.event.pull_request.user.login }}"
           fi
 
-          versions=$(/bin/bash -x ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
+          versions=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
           echo -------------
           echo "versions: $versions"
           echo -------------
           
           default_branch=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
           
-          branches=$(ci/auto-pr/conv_proj_version_to_branch $default_branch $versions)
+          branches=$(../auto-pr/ci/auto-pr/conv_proj_version_to_branch $default_branch $versions)
           # Remove the base branch from the list because the target change is already merged to the branch.
           branches=$(echo "$branches" | sed "/^${{ github.base_ref }}$/d")
           echo -------------
           echo "branches: $branches"
           echo -------------
 
-          /bin/bash -x ci/auto-pr/create_pull_requests \
+          /bin/bash -x ../auto-pr/ci/auto-pr/create_pull_requests \
             "${{ github.event.number }}" \
             "${{ github.event.pull_request.html_url }}" \
             "$PR_TITLE" \
