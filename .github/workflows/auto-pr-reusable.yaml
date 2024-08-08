@@ -33,7 +33,7 @@ jobs:
 
       - name: Create pull requests
         run: |
-          assignee=$(ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
+          assignee=$(/bin/bash -x ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
           echo -------------
           echo "assignee: $assignee"
           echo -------------
@@ -44,7 +44,7 @@ jobs:
             new_pr_assignee="${{ github.event.pull_request.user.login }}"
           fi
 
-          versions=$(ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
+          versions=$(/bin/bash -x ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
           echo -------------
           echo "versions: $versions"
           echo -------------
@@ -56,7 +56,7 @@ jobs:
           echo "branches: $branches"
           echo -------------
 
-          ci/auto-pr/create_pull_requests \
+          /bin/bash -x ci/auto-pr/create_pull_requests \
             "${{ github.event.number }}" \
             "${{ github.event.pull_request.html_url }}" \
             "$PR_TITLE" \
