@@ -28,7 +28,7 @@ jobs:
       - name: Checkout auto-pr scripts
         uses: actions/checkout@v4
         with:
-          repository: scalar-labs/actions
+          repository: Torch3333/scalardb
           sparse-checkout: ci/auto-pr
           ref: master
           path: auto-pr
