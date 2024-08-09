@@ -20,11 +20,6 @@ jobs:
       # Escape the PR title. See https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable for details
       PR_TITLE: ${{ github.event.pull_request.title }}
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
       - name: Checkout auto-pr scripts
         uses: actions/checkout@v4
         with:
@@ -32,7 +27,8 @@ jobs:
           sparse-checkout: ci/auto-pr
           ref: master
           path: auto-pr
-      - name: Checkout project repository
+
+      - name: Checkout the target repository
         uses: actions/checkout@v4
         with:
           # This is necessary to avoid unexpected auto-merge in git cherry-pick
@@ -44,7 +40,7 @@ jobs:
       - name: Create pull requests
         working-directory: repo
         run: |
-          assignee=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
+          assignee=$(../auto-pr/ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
           echo -------------
           echo "assignee: $assignee"
           echo -------------
@@ -55,7 +51,7 @@ jobs:
             new_pr_assignee="${{ github.event.pull_request.user.login }}"
           fi
 
-          versions=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
+          versions=$(../auto-pr/ci/auto-pr/fetch_gh_proj_versions "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.number }}" "${{ inputs.project_base_name}}")
           echo -------------
           echo "versions: $versions"
           echo -------------
@@ -67,7 +63,7 @@ jobs:
           echo "branches: $branches"
           echo -------------
 
-          /bin/bash -x ../auto-pr/ci/auto-pr/create_pull_requests \
+          ../auto-pr/ci/auto-pr/create_pull_requests \
             "${{ github.event.number }}" \
             "${{ github.event.pull_request.html_url }}" \
             "$PR_TITLE" \
