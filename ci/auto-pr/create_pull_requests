@@ -82,7 +82,7 @@ function get_successfull_backport_pr_body() {
 	local branch=$1
 
 	body=$(cat <<-END
-	This is an automated backport of the following commit:
+	This is an automated backport of the following:
 
 	- Original PR: $pull_request_url
 	- Backported commit: $commit_sha
@@ -98,7 +98,7 @@ function get_failed_backport_pr_body() {
 	local branch=$1
 
 	body=$(cat <<-END
-	This is an automated request for a manual backport of the following commit:
+	This is an automated request for a manual backport of the following:
 
 	- Original PR: $pull_request_url
 	- Commit to backport: $commit_sha
@@ -106,11 +106,13 @@ function get_failed_backport_pr_body() {
 	1. Resolve resolve any conflicts that arise during the cherry-pick process.
 
 	\`\`\`
-	git checkout -b $new_branch && git cherry-pick --no-rerere-autoupdate -m1 $commit_sha
+	git fetch origin $new_branch \&&
+	git checkout $new_branch \&&
+	git cherry-pick --no-rerere-autoupdate -m1 $commit_sha
 	\`\`\`
 
-	2. Push the changes to this PR.
-	3. Merge it once all checks have passed.
+	2. Push the changes.
+	3. Merge the PR once all checks have passed.
 
 	Thank you!
 	END
