@@ -1,4 +1,4 @@
-name: Auto-PR reusable workflow
+name: Auto-PR reusable action
 
 on:
   workflow_call:
@@ -6,9 +6,8 @@ on:
       project_base_name:
         required: true
         type: string
-      version:
-        required: true
-        type: string
+        description: 'The base name of the project used in the repository. For example, "ScalarDB" if projects are named "ScalarDB <version>"'
+
 
 env:
   TERM: dumb
@@ -29,10 +28,9 @@ jobs:
       - name: Checkout auto-pr scripts
         uses: actions/checkout@v4
         with:
-          repository: torch3333/scalardb
-          fetch-depth: 0
+          repository: scalar-labs/actions
           sparse-checkout: ci/auto-pr
-          ref: ${{ inputs.version }}
+          ref: master
           path: auto-pr
       - name: Checkout project repository
         uses: actions/checkout@v4
@@ -46,7 +44,7 @@ jobs:
       - name: Create pull requests
         working-directory: repo
         run: |
-          assignee=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
+          assignee=$(/bin/bash -x ../auto-pr/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
           echo -------------
           echo "assignee: $assignee"
           echo -------------
@@ -62,9 +60,7 @@ jobs:
           echo "versions: $versions"
           echo -------------
           
-          default_branch=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name')
-          
-          branches=$(../auto-pr/ci/auto-pr/conv_proj_version_to_branch $default_branch $versions)
+          branches=$(../auto-pr/ci/auto-pr/conv_proj_version_to_branch $versions)
           # Remove the base branch from the list because the target change is already merged to the branch.
           branches=$(echo "$branches" | sed "/^${{ github.base_ref }}$/d")
           echo -------------

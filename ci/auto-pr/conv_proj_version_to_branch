@@ -2,8 +2,8 @@
 
 require "set"
 
-default_branch_name = ARGV.shift
 versions = ARGV
+default_branch = `gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name'`.strip
 
 versions.inject(Set.new) {|acc, v|
   major_version, minor_version, patch_version = v.strip.split(".")
