@@ -67,7 +67,7 @@ function cherry_pick_and_create_pull_request () {
 function create_pr(){
 	local branch=$1
 	shift
-	local body=$2
+	local body=$1
 	shift
 	local other_options=$@
 
