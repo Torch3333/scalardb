@@ -8,7 +8,6 @@ on:
         type: string
         description: 'The base name of the project used in the repository. For example, "ScalarDB" if projects are named "ScalarDB <version>"'
 
-
 env:
   TERM: dumb
 jobs:

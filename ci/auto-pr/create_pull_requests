@@ -106,8 +106,8 @@ function get_failed_backport_pr_body() {
 	1. Resolve resolve any conflicts that arise during the cherry-pick process.
 
 	\`\`\`console
-	git fetch origin $new_branch &&\
-	git checkout $new_branch &&\
+	git fetch origin $new_branch &&
+	git checkout $new_branch &&
 	git cherry-pick --no-rerere-autoupdate -m1 $commit_sha
 	\`\`\`
 
