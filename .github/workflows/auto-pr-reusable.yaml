@@ -44,7 +44,7 @@ jobs:
       - name: Create pull requests
         working-directory: repo
         run: |
-          assignee=$(/bin/bash -x ../auto-pr/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
+          assignee=$(/bin/bash -x ../auto-pr/ci/auto-pr/fetch_gh_user_info "${{ github.event.repository.owner.login }}" "${{ github.event.repository.name }}" "${{ github.event.pull_request.user.login }}")
           echo -------------
           echo "assignee: $assignee"
           echo -------------
