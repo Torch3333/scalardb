@@ -86,7 +86,6 @@ function get_successfull_backport_pr_body() {
 
 	- Original PR: $pull_request_url
 	- Backported commit: $commit_sha
-	- Target branch: $branch
 
 	Please merge the PR once all checks have passed.
 	END
@@ -103,12 +102,11 @@ function get_failed_backport_pr_body() {
 
 	- Original PR: $pull_request_url
 	- Commit to backport: $commit_sha
-	- Target branch: $branch
 
 	1. Resolve resolve any conflicts that arise during the cherry-pick process.
 
 	\`\`\`
-	git checkout $new_branch && git cherry-pick --no-rerere-autoupdate -m1 $commit_sha
+	git checkout -b $new_branch && git cherry-pick --no-rerere-autoupdate -m1 $commit_sha
 	\`\`\`
 
 	2. Push the changes to this PR.
