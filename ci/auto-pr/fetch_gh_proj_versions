@@ -3,7 +3,7 @@
 set -e -o pipefail; [[ -n "$DEBUG" ]] && set -x
 
 if [[ $# -ne 4 ]]; then
-    echo "usage: $0 repo_owner repo_name pull_request_id"
+    echo "usage: $0 repo_owner repo_name pull_request_id project_base_name"
     exit 1
 fi
 

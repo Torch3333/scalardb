@@ -73,5 +73,5 @@ jobs:
             "$PR_TITLE" \
             "${{ github.sha }}" \
             "$new_pr_assignee" \
-            $branches
+            "$branches"
 

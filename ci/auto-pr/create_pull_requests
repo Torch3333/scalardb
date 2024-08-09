@@ -19,20 +19,22 @@ assignee=$1
 shift
 branches=("$@")
 
-# Use the author info of the original Git commit
-git config --global user.email $(git show -s --format='%ae' $commit_sha)
-git config --global user.name $(git show -s --format='%an' $commit_sha)
+function main(){
+  # Use the author info of the original Git commit
+  git config --global user.email $(git show -s --format='%ae' $commit_sha)
+  git config --global user.name $(git show -s --format='%an' $commit_sha)
 
-git fetch origin
+  git fetch origin
 
-# Create PRs based on the target support branches and release branches
-for branch in ${branches[@]}; do
-  new_branch="$branch-pull-$pull_request_id"
+  # Create PRs based on the target support branches and release branches
+  for branch in ${branches[@]}; do
+    new_branch="$branch-pull-$pull_request_id"
 
-  # Create a new temp branch, push it and create a PR for the change.
-  # But create an issue if anything fails.
-  cherry_pick_and_create_pull_request $branch $new_branch || create_issue $branch
-done
+    # Create a new temp branch, push it and create a PR for the change.
+    # But create an issue if anything fails.
+    cherry_pick_and_create_pull_request $branch $new_branch || create_issue $branch
+  done
+}
 
 function cherry_pick_and_create_pull_request () {
   local branch=$1
@@ -58,7 +60,7 @@ function cherry_pick_and_create_pull_request () {
    git push origin $new_branch
    git status
    local pr_body=$(get_failed_backport_pr_body $branch)
-   create_pr $branch $pr_local pr_body --draft
+   create_pr $branch $pr_body --draft
   fi
 }
 
@@ -126,5 +128,7 @@ function create_issue () {
 
   gh issue create --assignee $assignee \
     --title "Backport to branch($branch) failed: $pull_request_title" \
-    --body "Backport of $pull_request_url to branch($branch) failed"
+    --body "Backport of $pull_request_url for commit $commit_sha to branch($branch) failed"
 }
+
+main
