@@ -51,16 +51,16 @@ function cherry_pick_and_create_pull_request () {
 		# If the cherry-pick succeeds, creates the backport PR with it
 		git push origin $new_branch
 		git status
-		local pr_body=$(get_successfull_backport_pr_body pr_body $branch)
-		create_pr $branch $local pr_body
+		pr_body=$(get_successfull_backport_pr_body pr_body $branch)
+		create_pr $branch "${pr_body}"
 	else
 		# If the cherry-pick fails, creates backport PR draft containing an empty commit
 	 git cherry-pick --abort
 	 git commit --allow-empty -m "Empty commit [skip ci]"
 	 git push origin $new_branch
 	 git status
-	 local pr_body=$(get_failed_backport_pr_body $branch)
-	 create_pr $branch $pr_body --draft
+	 pr_body=$(get_failed_backport_pr_body $branch)
+	 create_pr $branch "${pr_body}" --draft
 	fi
 }
 
@@ -74,7 +74,7 @@ function create_pr(){
 	gh pr create --assignee $assignee \
 				 --base "$branch" \
 				 --title "Backport to branch($branch) : $pull_request_title" \
-				 --body $body \
+				 --body "${body}" \
 				 $other_options
 }
 
