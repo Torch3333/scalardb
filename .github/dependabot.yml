@@ -12,7 +12,7 @@ updates:
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "software.amazon.awssdk:*"
         update-types: [ "version-update:semver-patch" ]
-    groups:
+#    groups:
   # For GitHub Actions workflows, update all actions
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -22,19 +22,22 @@ updates:
       - "scalar-labs/scalardb"
     target-branch: "main"
     groups:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "scalar-labs/scalardb"
-    target-branch: "3"
-    groups:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "scalar-labs/scalardb"
-    target-branch: "3.13"
-    groups:
+      actions:
+        
+#  - package-ecosystem: "github-actions"
+#    directory: "/"
+#    schedule:
+#      interval: "weekly"
+#    reviewers:
+#      - "scalar-labs/scalardb"
+#    target-branch: "3"
+#    groups:
+#      actions:
+#  - package-ecosystem: "github-actions"
+#    directory: "/"
+#    schedule:
+#      interval: "weekly"
+#    reviewers:
+#      - "scalar-labs/scalardb"
+#    target-branch: "3.13"
+#    groups:
