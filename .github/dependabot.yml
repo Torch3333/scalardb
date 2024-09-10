@@ -23,7 +23,8 @@ updates:
     target-branch: "main"
     groups:
       actions:
-        
+        patterns:
+          - "*"
 #  - package-ecosystem: "github-actions"
 #    directory: "/"
 #    schedule:
