@@ -22,7 +22,7 @@ updates:
     reviewers:
       - "scalar-labs/scalardb"
     groups:
-      "actions on branch master":
+      actions on branch master:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -31,7 +31,7 @@ updates:
       interval: "weekly"
     target-branch: "3"
     groups:
-      "actions on branch 3":
+      actions on branch 3:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
@@ -40,6 +40,6 @@ updates:
       interval: "weekly"
     target-branch: "3.13"
     groups:
-      "actions on branch 3.13":
+      actions on branch 3.13:
         patterns:
           - "*"
